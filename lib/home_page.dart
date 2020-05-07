@@ -1,5 +1,4 @@
 import 'package:codeinput/code_input_row.dart';
-import 'package:codeinput/input_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +10,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _controller = TextEditingController();
   String _code = '';
-  var _length=5; //验证码长度，输入框框的个数
+  var _length=6; //验证码长度，输入框框的个数
+  var _type = CodeInputType.squareBox;
+  double _sliderProcess=6.0;
   @override
   void initState() {
     super.initState();
@@ -53,8 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     InputCell(isFocused: _code.length == 5, text: _code.length>=6?_code.substring(5,6):'',),
                   ],
                 )*/
+                ///[CodeInputRow]其实就是上面这段注释的代码里的Row封装一下
                 //验证码输入框整行，
-                CodeInputRow(code: _code,length: _length),
+                CodeInputRow(code: _code,length: _length,type: _type),
                 Opacity(
                   opacity: 0,
                   child: TextField(
@@ -96,7 +98,58 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(flex: 1, child: Container()),
             Text("60秒后重新发送", style: TextStyle(fontSize: 16, color: Colors.grey)),
-            Expanded(flex: 18, child: Container()),
+            Expanded(flex: 1, child: Container()),
+            Text('样式',style: TextStyle(fontSize: 16)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Radio(
+                      value: CodeInputType.squareBox,
+                      groupValue: _type,
+                      onChanged: (v){
+                        _type = v;
+                        setState(() {});
+                      },
+                    ),
+                    Text('方框'),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Radio(
+                      value: CodeInputType.underLine,
+                      groupValue: _type,
+                      onChanged: (v){
+                        _type = v;
+                        setState(() {});
+                      },
+                    ),
+                    Text('下划线'),
+                  ],
+                ),
+              ],
+            ),
+            Expanded(flex: 1, child: Container()),
+            Text('验证码长度  $_length',style: TextStyle(fontSize: 16)),
+            Slider(
+              max: 6.0,
+              min: 4.0,
+              divisions: 2,
+              value: _sliderProcess,
+              onChanged: (v){
+                _sliderProcess = v;
+                setState(() {});
+              },
+              onChangeEnd: (v){
+                _length = v.toInt();
+                _controller.text='';
+                _code='';
+                setState(() {});
+              },
+            ),
+            Expanded(flex: 12, child: Container()),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

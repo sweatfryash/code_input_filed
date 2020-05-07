@@ -2,22 +2,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class InputCell extends StatefulWidget {
+class SquareInputCell extends StatefulWidget {
   final bool isFocused;
   final String text;
 
-  const InputCell({Key key, this.isFocused, this.text}) : super(key: key);
+  const SquareInputCell({Key key, this.isFocused, this.text}) : super(key: key);
   @override
-  State<StatefulWidget> createState() => _InputCellState();
+  State<StatefulWidget> createState() => _SquareInputCellState();
 }
 
-class _InputCellState extends State<InputCell> {
+class _SquareInputCellState extends State<SquareInputCell> {
   //未聚焦的边框
   final unfocusedDecoration = BoxDecoration(border: Border.all(color: Colors.grey[300]));
   //聚焦的边框
   final focusedDecoration = BoxDecoration(
     color: Colors.white,
-      border: Border.all(color: Colors.blue),
+      border: Border.all(color: Colors.blue,width: 1.5),
       /*boxShadow: [
         BoxShadow(color: Colors.blue[300],offset: Offset(1, 1),blurRadius: 0.5,),
         BoxShadow(color: Colors.blue[300], offset: Offset(-1, -1), blurRadius:0.5),
@@ -37,10 +37,14 @@ class _InputCellState extends State<InputCell> {
     super.initState();
       timer = Timer.periodic(Duration(seconds: 1), (timer) {
         cursorColor = Colors.transparent;
-        setState(() {});
+        if(mounted){
+          setState(() {});
+        }
         Future.delayed(Duration(milliseconds: 500), () {
           cursorColor = Colors.blue;
-          setState(() {});
+          if(mounted){
+            setState(() {});
+          }
         });
       });
   }
@@ -59,7 +63,7 @@ class _InputCellState extends State<InputCell> {
         style: TextStyle(fontSize: 22),
       ),
     );
-    focusedCell = Container(margin: EdgeInsets.symmetric(horizontal: 20.7, vertical: 11), color: cursorColor);
+    focusedCell = Container(margin: EdgeInsets.symmetric(horizontal: 20.2, vertical: 11), color: cursorColor);
 
     return Container(
       width: 45,
