@@ -8,16 +8,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController _controller = TextEditingController();
+  TextEditingController _controller = TextEditingController(text: '');
   String _code = '';
-  var _length=6; //验证码长度，输入框框的个数
+  var _length = 6; //验证码长度，输入框框的个数
   var _type = CodeInputType.squareBox;
-  double _sliderProcess=6.0;
-  @override
-  void initState() {
-    super.initState();
-    _controller.text='';
-  }
+  double _sliderProcess = 6.0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +20,16 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("验证码登录",style: TextStyle(color: Colors.black),),
+        title: Text(
+          "验证码登录",
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
         elevation: 0.5,
-        leading: Icon(Icons.arrow_back,color: Colors.black,),
+        leading: Icon(
+          Icons.arrow_back,
+          color: Colors.black,
+        ),
         backgroundColor: Colors.white,
       ),
       body: Container(
@@ -39,7 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(flex: 2, child: Container()),
             Text("输入短信验证码", style: TextStyle(fontSize: 30)),
             Expanded(flex: 1, child: Container()),
-            Text("短信验证码至 131 9999 9999", style: TextStyle(fontSize: 16, color: Colors.grey)),
+            Text("短信验证码至 131 9999 9999",
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             Expanded(flex: 5, child: Container()),
             Stack(
               children: <Widget>[
@@ -54,40 +56,43 @@ class _MyHomePageState extends State<MyHomePage> {
                     InputCell(isFocused: _code.length == 5, text: _code.length>=6?_code.substring(5,6):'',),
                   ],
                 )*/
+
                 ///[CodeInputRow]其实就是上面这段注释的代码里的Row封装一下
                 //验证码输入框整行，
-                CodeInputRow(code: _code,length: _length,type: _type),
+                CodeInputRow(code: _code, length: _length, type: _type),
                 Opacity(
                   opacity: 0,
                   child: TextField(
                     //只能输入字母与数字
-                    inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-z,0-9,A-Z]"))],
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter(RegExp("[a-z,0-9,A-Z]"))
+                    ],
                     autofocus: true,
                     keyboardType: TextInputType.number,
                     controller: _controller,
                     onChanged: (String str) {
                       _code = str;
                       setState(() {});
-                      if(str.length==_length){
+                      if (str.length == _length) {
                         showDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              content:Text('填入的验证码是$_code'),
-                              actions:<Widget>[
+                              content: Text('填入的验证码是$_code'),
+                              actions: <Widget>[
                                 FlatButton(
                                   child: Text('OK'),
-                                  onPressed: (){
+                                  onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
                               ],
                             );
                           },
-                        ).then((v){
-                          _controller.text='';
-                          _code='';
+                        ).then((v) {
+                          _controller.text = '';
+                          _code = '';
                           setState(() {});
                         });
                       }
@@ -97,19 +102,20 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(flex: 1, child: Container()),
-            Text("60秒后重新发送", style: TextStyle(fontSize: 16, color: Colors.grey)),
+            Text("60秒后重新发送",
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
             Expanded(flex: 1, child: Container()),
-            Text('样式',style: TextStyle(fontSize: 16)),
+            Text('样式', style: TextStyle(fontSize: 16)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    Radio(
+                    Radio<CodeInputType>(
                       value: CodeInputType.squareBox,
                       groupValue: _type,
-                      onChanged: (v){
-                        _type = v;
+                      onChanged: (CodeInputType? type) {
+                        _type = type ?? CodeInputType.squareBox;
                         setState(() {});
                       },
                     ),
@@ -121,8 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Radio(
                       value: CodeInputType.underLine,
                       groupValue: _type,
-                      onChanged: (v){
-                        _type = v;
+                      onChanged: (CodeInputType? type) {
+                        _type = type ?? CodeInputType.squareBox;
                         setState(() {});
                       },
                     ),
@@ -132,20 +138,20 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             Expanded(flex: 1, child: Container()),
-            Text('验证码长度  $_length',style: TextStyle(fontSize: 16)),
+            Text('验证码长度  $_length', style: TextStyle(fontSize: 16)),
             Slider(
               max: 6.0,
               min: 4.0,
               divisions: 2,
               value: _sliderProcess,
-              onChanged: (v){
+              onChanged: (v) {
                 _sliderProcess = v;
                 setState(() {});
               },
-              onChangeEnd: (v){
+              onChangeEnd: (v) {
                 _length = v.toInt();
-                _controller.text='';
-                _code='';
+                _controller.text = '';
+                _code = '';
                 setState(() {});
               },
             ),

@@ -6,47 +6,50 @@ class SquareInputCell extends StatefulWidget {
   final bool isFocused;
   final String text;
 
-  const SquareInputCell({Key key, this.isFocused, this.text}) : super(key: key);
+  const SquareInputCell({Key? key, required this.isFocused, required this.text})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() => _SquareInputCellState();
 }
 
 class _SquareInputCellState extends State<SquareInputCell> {
   //未聚焦的边框
-  final unfocusedDecoration = BoxDecoration(border: Border.all(color: Colors.grey[300]));
+  final unfocusedDecoration =
+      BoxDecoration(border: Border.all(color: Colors.grey.shade300));
   //聚焦的边框
   final focusedDecoration = BoxDecoration(
     color: Colors.white,
-      border: Border.all(color: Colors.blue,width: 1.5),
-      /*boxShadow: [
+    border: Border.all(color: Colors.blue, width: 1.5),
+    /*boxShadow: [
         BoxShadow(color: Colors.blue[300],offset: Offset(1, 1),blurRadius: 0.5,),
         BoxShadow(color: Colors.blue[300], offset: Offset(-1, -1), blurRadius:0.5),
         BoxShadow(color: Colors.blue[300], offset: Offset(1, -1), blurRadius: 0.5),
         BoxShadow(color: Colors.blue[300], offset: Offset(-1, 1), blurRadius: 0.5)
-      ]*/);
+      ]*/
+  );
   //聚焦的格子
   var focusedCell;
   //未聚焦的格子
   var unFocusedCell;
   //聚焦时的光标颜色，实现光标闪烁
   Color cursorColor = Colors.blue;
-  Timer timer;
+  late Timer timer;
 
   @override
   void initState() {
     super.initState();
-      timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        cursorColor = Colors.transparent;
-        if(mounted){
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      cursorColor = Colors.transparent;
+      if (mounted) {
+        setState(() {});
+      }
+      Future.delayed(Duration(milliseconds: 500), () {
+        cursorColor = Colors.blue;
+        if (mounted) {
           setState(() {});
         }
-        Future.delayed(Duration(milliseconds: 500), () {
-          cursorColor = Colors.blue;
-          if(mounted){
-            setState(() {});
-          }
-        });
       });
+    });
   }
 
   @override
@@ -59,11 +62,13 @@ class _SquareInputCellState extends State<SquareInputCell> {
   Widget build(BuildContext context) {
     unFocusedCell = Center(
       child: Text(
-        widget.text ?? '',
+        widget.text,
         style: TextStyle(fontSize: 22),
       ),
     );
-    focusedCell = Container(margin: EdgeInsets.symmetric(horizontal: 20.2, vertical: 11), color: cursorColor);
+    focusedCell = Container(
+        margin: EdgeInsets.symmetric(horizontal: 20.2, vertical: 11),
+        color: cursorColor);
 
     return Container(
       width: 45,
